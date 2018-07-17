@@ -2,8 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Localization.Internal;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -54,6 +56,24 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             AddLocalizationServices(services, setupAction);
+
+            return services;
+        }
+
+        public static IServiceCollection AddInMemoryLocalization(this IServiceCollection services, IList<Resource> resources)
+        {
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (resources == null)
+            {
+                throw new ArgumentNullException(nameof(resources));
+            }
+
+            services.TryAddSingleton<IStringLocalizerFactory>(new InMemoryStringLocalizerFactory(resources));
+            services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
 
             return services;
         }

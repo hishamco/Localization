@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information. 
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Localization.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace LocalizationSample
@@ -18,7 +20,11 @@ namespace LocalizationSample
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLocalization(options => options.ResourcesPath = "My/Resources");
+            services.AddInMemoryLocalization(new List<Resource>
+            {
+                new Resource("en-US", "Hello", "Hello"),
+                new Resource("fr-FR", "Hello", "Bonjour"),
+            });
         }
 
         public void Configure(IApplicationBuilder app, IStringLocalizer<Startup> SR)
